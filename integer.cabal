@@ -1,0 +1,36 @@
+name:                integer
+version:             0.1.0.0
+synopsis:            Reexports integer-gmp or integer-simple
+homepage:            https://github.com/basvandijk/integer
+license:             BSD3
+license-file:        LICENSE
+author:              Bas van Dijk
+maintainer:          v.dijk.bas@gmail.com
+copyright:           Bas van Dijk <v.dijk.bas@gmail.com>
+category:            Numeric, Algebra
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >=1.24
+
+Flag integer-simple
+    Description: Use integer-simple
+    Default: False
+
+Flag integer-gmp
+    Description: Use integer-gmp
+    Default: True
+
+library
+  -- sanity-check to ensure exactly one flag is set
+  if !((flag(integer-gmp) && !flag(integer-simple)) || (!flag(integer-gmp) && flag(integer-simple)))
+      build-depends: invalid-cabal-flag-settings<0
+
+  if flag(integer-simple)
+      build-depends: integer-simple
+
+  if flag(integer-gmp)
+      build-depends: integer-gmp
+
+  reexported-modules:
+     GHC.Integer
+   , GHC.Integer.Logarithms
